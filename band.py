@@ -1,94 +1,105 @@
-class Band:
-    
-    all = []
+class Band():
+    members = []
 
-    def __init__(self, name, members=[]):
+    def __init__(self, name):
         self.name = name
-        self.members = members
-        self.__class__.all.append(self)
-
-    def __repr__(self):
-        return f'{self.name} - {self.members}'
-
-    def __str__(self):
-        return f'The pack is led by {self.name}, the members are {self.members}'
-
-    @staticmethod
-    def get_pack_oath():
-        return 'all for one, one for all'
-
-    @classmethod
-    def create_from_data(cls, data):
-        """Create a new Pack with member Dogs
-        with given data.
-        Data is a string in form
-        Each line has 'dog name, breed'
-        First line is name, rest followers
-
-
-
-        Arguments:
-            data {[type]} -- [description]
-        """
-
-        lines = data.split('\n')
-
-        name_line = lines[0]
-
-        # Rex,Terrier -> Terrier('Rex')
-        line_parts = name_line.split(',')
-        dog_name = line_parts[0]
-        dog_breed = line_parts[1]
-
-        if dog_breed == 'Terrier':
-            name = Terrier(dog_name)
-
-        followers = [Puggle('Jolene'), Bullhuahua('Keanu')]
-        return Pack(name, followers)
-
-class Guitarist:
-
-    # class attribute
-    dog_list = []
-
-    def __init__(self, name, breed='mutt'):
-        self.name = name
-        self.breed = breed
-        self.__class__.dog_list.append(self)
 
     def __repr__(self):
         return self.name
 
-    def __str__(self):
-        return f'I am a {self.__class__.__name__} named {self.name}'
+    @classmethod
+    def play_solos(cls):
+        for member in cls.members:
+            print(f'{member} has an amazing {member.instrument} solo')
 
     @classmethod
-    def get_dogs(cls):
-        return cls.dog_list
+    def create_from_data(cls, data):
+        for musician in data:
+            if musician['instrument'] == 'Guitar':
+                cls.members.append(
+                    Guitarist(musician['name'], musician['instrument']))
 
+            elif musician['instrument'] == 'Bass':
+                cls.members.append(
+                    Bassist(musician['name'], musician['instrument']))
 
-class Bassist(Band):
+            elif musician['instrument'] == 'Drums':
+                cls.members.append(
+                    Drummer(musician['name'], musician['instrument']))
 
-    def __init__(self, name):
-        super().__init__(name, 'bullhuahua')
-
-    def do_cute_thing(self):
-        return 'take on a dog 10 times your size'
-
-
-class Drummer(Band):
-
-    def __init__(self, name):
-        super().__init__(name, 'terrier')
-
-    def do_cute_thing(self):
-        return 'chase every squirrel in neighborhood'
+    @classmethod
+    def to_list(cls):
+        return cls.members
 
 
 class Musician(Band):
+    musician_list = []
 
     def __init__(self, name):
-        super().__init__(name, 'puggle')
+        super().__init__(self)
+        self.name = name
+        self.__class__.musician_list.append(self)
 
-    def do_cute_thing(self):
-        return 'warm human feet'
+    @classmethod
+    def get_members(cls):
+        return cls.musician_list
+
+
+class Guitarist(Musician):
+    def __init__(self, name, instrument):
+        self.name = name
+        self.instrument = instrument
+        super().__init__(name)
+
+    def play_solo(self):
+        return 'Guitar Solo'
+
+    def get_instrument(self):
+        return 'guitar'
+
+
+class Bassist(Musician):
+    def __init__(self, name, instrument):
+        self.name = name
+        self.instrument = instrument
+        super().__init__(name)
+
+    def play_solo(self):
+        return 'Bass Solo'
+
+    def get_instrument(self):
+        return 'Bass'
+
+
+class Drummer(Musician):
+    def __init__(self, name, instrument):
+        self.name = name
+        self.instrument = instrument
+        super().__init__(name)
+
+    def play_solo(self):
+        return 'Drum Solo'
+
+    def get_instrument(self):
+        return 'Drums'
+
+
+
+
+data = [
+    {'name': 'James',
+        'instrument': 'Bass'
+     },
+    {'name': 'Sam',
+        'instrument': 'Drums'
+     },
+    {'name': 'Rick',
+     'instrument': 'Guitar'
+     }
+]
+
+
+Band.moment_of_fame()
+Band.create_from_data(data)
+Band.to_list()
+Musician.play_solos()
